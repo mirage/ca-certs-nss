@@ -21,7 +21,7 @@
   (astring :build)
   (cmdliner :build)
   (alcotest :with-test))
- (synopsis "Trust anchors extracted from Mozilla's NSS certdata.txt.")
+ (synopsis "X.509 trust anchors extracted from Mozilla's NSS")
  (description
    "\> Trust anchors extracted from Mozilla's NSS certdata.txt package,
    "\> to be used in MirageOS unikernels.
