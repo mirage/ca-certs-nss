@@ -18,4 +18,4 @@
  (name ca_certs_nss)
  (public_name ca-certs-nss)
  (modules ca_certs_nss trust_anchor)
- (libraries x509 rresult mirage-clock))
+ (libraries x509 rresult mirage-clock mirage-crypto))
