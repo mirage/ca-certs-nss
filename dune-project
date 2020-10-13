@@ -14,6 +14,12 @@
   rresult mirage-crypto mirage-clock
   (x509 (>= 0.11.0))
   (ocaml (>= 4.07.0))
+  (logs :build)
+  (fmt :build)
+  (hex :build)
+  (bos :build)
+  (astring :build)
+  (cmdliner :build)
   (alcotest :with-test))
  (synopsis "Trust anchors extracted from Mozilla's NSS certdata.txt.")
  (description
