@@ -1,7 +1,7 @@
 module Make (C : Mirage_clock.PCLOCK) = struct
   open Rresult.R.Infix
 
-  let trust_anchor ?crls ?hash_whitelist () =
+  let authenticator ?crls ?hash_whitelist () =
     List.fold_left
       (fun acc data ->
         acc >>= fun acc ->
