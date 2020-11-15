@@ -1,12 +1,12 @@
 ; to update, browse to https://hg.mozilla.org/projects/nss/tags
-; find the ID of the last release
+; find the last release (click on the tag, find the "changeset .. ID" line)
 ; rm lib/certdata.txt
-; run dune build lib/certdata.latest.txt
-; (rule
+; run dune build lib/certdata.txt
+;(rule
 ; (targets certdata.txt)
 ; (action
 ;  (bash
-;    "wget https://hg.mozilla.org/projects/nss/raw-file/cf7e3e8abd7762c0820b1ea580e6cc2e049f94ef/lib/ckfw/builtins/certdata.txt -O %{targets}")))
+;    "wget https://hg.mozilla.org/projects/nss/raw-file/c5d760cbe8d0c2221a2785db977bd1f1475510ca/lib/ckfw/builtins/certdata.txt -O %{targets}")))
 
 (rule
  (targets trust_anchor.ml)
