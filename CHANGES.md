@@ -1,5 +1,7 @@
-# unreleased
+# v3.63 (2021-03-18)
 
+* Update to NSS 3.63 (Mar 18th 2021)
+* Update to NSS 3.62 (Feb 19th 2021), no changes in certdata.txt
 * Update to NSS 3.61 (Jan 22th 2021), no changes in certdata.txt
 
 # v3.60 (2020-12-20)
