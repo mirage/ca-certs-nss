@@ -9,9 +9,9 @@ module Make (C : Mirage_clock.PCLOCK) = struct
           cert :: acc)
         (Ok []) Trust_anchor.certificates
     and time () = Some (Ptime.v (C.now_d_ps ())) in
-    fun ?crls ?hash_whitelist () ->
+    fun ?crls ?allowed_hashes () ->
       match tas with
       | Ok t ->
-          Ok (X509.Authenticator.chain_of_trust ~time ?crls ?hash_whitelist t)
+          Ok (X509.Authenticator.chain_of_trust ~time ?crls ?allowed_hashes t)
       | Error e -> Error e
 end
