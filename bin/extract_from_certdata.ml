@@ -48,7 +48,7 @@ let grab_cert input =
         let id, serial = get_id_serial id serial in
         match cert with
         | None -> invalid_arg "missing certificate"
-        | Some x -> (id, serial, x) )
+        | Some x -> (id, serial, x))
     | "CKA_VALUE MULTILINE_OCTAL" :: tl ->
         let cert, tl = until_end tl in
         go id serial (Some cert) tl
@@ -98,7 +98,7 @@ let grab_trust input =
         | None ->
             let id, serial, tl = label_serial id serial (x :: tl) in
             go id serial trust tl
-        | Some y -> go id serial (y :: trust) tl )
+        | Some y -> go id serial (y :: trust) tl)
   in
   go None None [] input
 
@@ -196,7 +196,7 @@ let filter_trusted ?(purpose = fun (_, _) -> true) db =
           else (
             Logs.warn (fun m ->
                 m "Untrusted certificate %s (serial %s)" id (to_hex serial));
-            (acc, succ untrusted) ))
+            (acc, succ untrusted)))
     db (M.empty, 0)
 
 let header =
@@ -206,9 +206,9 @@ let stats ucount tcount dcount =
   Fmt.strf "(* processed %d certificates, %d untrusted, %d trusted. *)%s"
     (ucount + tcount + dcount)
     ucount tcount
-    ( if dcount > 0 then
-      "\n(* Omitted " ^ string_of_int dcount ^ " certificates (decoding). *)"
-    else "" )
+    (if dcount > 0 then
+     "\n(* Omitted " ^ string_of_int dcount ^ " certificates (decoding). *)"
+    else "")
 
 let to_ml untrusted db =
   let certs, decoding_issues =

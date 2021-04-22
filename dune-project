@@ -1,4 +1,4 @@
-(lang dune 2.0)
+(lang dune 2.7)
 (name ca-certs-nss)
 
 (generate_opam_files true)
@@ -12,8 +12,8 @@
  (name ca-certs-nss)
  (depends
   rresult mirage-crypto mirage-clock
-  (x509 (>= 0.11.0))
-  (ocaml (>= 4.07.0))
+  (x509 (>= 0.13.0))
+  (ocaml (>= 4.08.0))
   (logs :build)
   (fmt :build)
   (hex :build)
