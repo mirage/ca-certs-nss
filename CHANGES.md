@@ -1,3 +1,7 @@
+# v3.66 (2021-06-01)
+
+* Update to NSS 3.66 (May 27th 2021)
+
 # v3.64.0.1 (2021-04-22)
 
 * Update to X509 0.13.0 API (still using NSS 3.64)
