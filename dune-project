@@ -11,7 +11,8 @@
 (package
  (name ca-certs-nss)
  (depends
-  rresult mirage-crypto mirage-clock
+  rresult mirage-crypto
+  (mirage-clock (>= 3.0.0))
   (x509 (>= 0.13.0))
   (ocaml (>= 4.08.0))
   (logs :build)
