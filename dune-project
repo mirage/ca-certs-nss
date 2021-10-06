@@ -11,13 +11,12 @@
 (package
  (name ca-certs-nss)
  (depends
-  rresult mirage-crypto
+  mirage-crypto
   (mirage-clock (>= 3.0.0))
   (x509 (>= 0.13.0))
   (ocaml (>= 4.08.0))
   (logs :build)
   (fmt :build)
-  (hex :build)
   (bos :build)
   (astring :build)
   (cmdliner :build)

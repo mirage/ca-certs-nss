@@ -13,14 +13,12 @@ doc: "https://mirage.github.io/ca-certs-nss/doc"
 bug-reports: "https://github.com/mirage/ca-certs-nss/issues"
 depends: [
   "dune" {>= "2.7"}
-  "rresult"
   "mirage-crypto"
   "mirage-clock" {>= "3.0.0"}
   "x509" {>= "0.13.0"}
   "ocaml" {>= "4.08.0"}
   "logs" {build}
   "fmt" {build}
-  "hex" {build}
   "bos" {build}
   "astring" {build}
   "cmdliner" {build}

@@ -21,7 +21,7 @@ end
 
 module TA_2020_10_11 = Ca_certs_nss.Make (Clock_2020_10_11)
 
-let default_auth = Rresult.R.get_ok (TA_2020_10_11.authenticator ())
+let default_auth = Result.get_ok (TA_2020_10_11.authenticator ())
 
 let now = Ptime.v (Clock_2020_10_11.now_d_ps ())
 
@@ -38,7 +38,7 @@ end
 
 module TA_2020_05_30 = Ca_certs_nss.Make (Clock_2020_05_30)
 
-let auth_2020_05_30 = Rresult.R.get_ok (TA_2020_05_30.authenticator ())
+let auth_2020_05_30 = Result.get_ok (TA_2020_05_30.authenticator ())
 
 let err =
   let module M = struct
@@ -964,7 +964,7 @@ let tests =
     (fun (name, data) ->
       let host = Domain_name.(of_string_exn name |> host_exn)
       and chain =
-        Rresult.R.get_ok
+        Result.get_ok
           (X509.Certificate.decode_pem_multiple (Cstruct.of_string data))
       in
       ( name,
@@ -975,7 +975,7 @@ let tests =
       (fun (name, result, data, auth) ->
         let host = Domain_name.(of_string_exn name |> host_exn)
         and chain =
-          Rresult.R.get_ok
+          Result.get_ok
             (X509.Certificate.decode_pem_multiple (Cstruct.of_string data))
         and auth = match auth with None -> default_auth | Some a -> a in
         (name, `Quick, test_one auth (Error (result host chain)) host chain))

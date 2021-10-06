@@ -2,8 +2,6 @@
 
 (* ideas from FreeBSD's security/ca-root-nss perl script, available at:
    https://github.com/freebsd/freebsd-ports/blob/master/security/ca_root_nss/files/MAca-bundle.pl.in *)
-open Rresult.R.Infix
-
 let until_end data =
   let rec go acc = function
     | [] -> invalid_arg "unexpected end of input (expected END)"
@@ -130,8 +128,17 @@ module M = Map.Make (struct
 end)
 
 let to_hex s =
-  let (`Hex serial) = Hex.of_string s in
-  serial
+  let char_hex n =
+    Char.unsafe_chr (n + if n < 10 then Char.code '0' else (Char.code 'a' - 10))
+  in
+  let slen = String.length s in
+  let out = Bytes.create (slen * 2) in
+  for i = 0 to pred slen do
+    let c = Char.code s.[i] in
+    Bytes.unsafe_set out (i * 2) (char_hex (c lsr 4));
+    Bytes.unsafe_set out (i * 2 + 1) (char_hex (c land 0x0f));
+  done;
+  Bytes.unsafe_to_string out
 
 let decode data =
   let certs, trust = split_into_certs_and_trust ([], []) None [] data in
@@ -235,15 +242,17 @@ let to_ml untrusted db =
     ]
 
 let jump () filename output =
-  Bos.OS.File.read_lines (Fpath.v filename) >>= fun data ->
-  let certs = decode data in
-  let trusted_certs, untrusted = filter_trusted certs in
-  Logs.debug (fun m ->
-      m "found %d certificates (%d total):" (M.cardinal trusted_certs)
-        (M.cardinal certs));
-  let out = to_ml untrusted trusted_certs in
-  let fn = match output with None -> "-" | Some filename -> filename in
-  Bos.OS.File.write (Fpath.v fn) out
+  Result.bind
+    (Bos.OS.File.read_lines (Fpath.v filename))
+    (fun data ->
+       let certs = decode data in
+       let trusted_certs, untrusted = filter_trusted certs in
+       Logs.debug (fun m ->
+           m "found %d certificates (%d total):" (M.cardinal trusted_certs)
+             (M.cardinal certs));
+       let out = to_ml untrusted trusted_certs in
+       let fn = match output with None -> "-" | Some filename -> filename in
+       Bos.OS.File.write (Fpath.v fn) out)
 
 let setup_log style_renderer level =
   Fmt_tty.setup_std_outputs ?style_renderer ();
