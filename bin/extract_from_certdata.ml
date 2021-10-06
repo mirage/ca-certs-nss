@@ -210,7 +210,7 @@ let header =
   "(* automatically extracted from certdata.txt by ca-certs-nss %%VERSION%%. *)"
 
 let stats ucount tcount dcount =
-  Fmt.strf "(* processed %d certificates, %d untrusted, %d trusted. *)%s"
+  Fmt.str "(* processed %d certificates, %d untrusted, %d trusted. *)%s"
     (ucount + tcount + dcount)
     ucount tcount
     (if dcount > 0 then

@@ -16,7 +16,7 @@
   (x509 (>= 0.13.0))
   (ocaml (>= 4.08.0))
   (logs :build)
-  (fmt :build)
+  (fmt (and :build (>= 0.8.7)))
   (bos :build)
   (astring :build)
   (cmdliner :build)
