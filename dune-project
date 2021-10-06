@@ -21,6 +21,7 @@
   (astring :build)
   (cmdliner :build)
   (alcotest :with-test))
+ (conflicts (result (< 1.5)))
  (synopsis "X.509 trust anchors extracted from Mozilla's NSS")
  (description
    "\> Trust anchors extracted from Mozilla's NSS certdata.txt package,
