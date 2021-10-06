@@ -1,3 +1,8 @@
+# v3.71 (2021-10-06)
+
+* Update to NSS 3.71 (Sep 30th 2021)
+* Remove rresult and hex dependencies
+
 # v3.66 (2021-06-01)
 
 * Update to NSS 3.66 (May 27th 2021)
