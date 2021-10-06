@@ -129,14 +129,14 @@ end)
 
 let to_hex s =
   let char_hex n =
-    Char.unsafe_chr (n + if n < 10 then Char.code '0' else (Char.code 'a' - 10))
+    Char.unsafe_chr (n + if n < 10 then Char.code '0' else Char.code 'a' - 10)
   in
   let slen = String.length s in
   let out = Bytes.create (slen * 2) in
   for i = 0 to pred slen do
     let c = Char.code s.[i] in
     Bytes.unsafe_set out (i * 2) (char_hex (c lsr 4));
-    Bytes.unsafe_set out (i * 2 + 1) (char_hex (c land 0x0f));
+    Bytes.unsafe_set out ((i * 2) + 1) (char_hex (c land 0x0f))
   done;
   Bytes.unsafe_to_string out
 
@@ -245,14 +245,14 @@ let jump () filename output =
   Result.bind
     (Bos.OS.File.read_lines (Fpath.v filename))
     (fun data ->
-       let certs = decode data in
-       let trusted_certs, untrusted = filter_trusted certs in
-       Logs.debug (fun m ->
-           m "found %d certificates (%d total):" (M.cardinal trusted_certs)
-             (M.cardinal certs));
-       let out = to_ml untrusted trusted_certs in
-       let fn = match output with None -> "-" | Some filename -> filename in
-       Bos.OS.File.write (Fpath.v fn) out)
+      let certs = decode data in
+      let trusted_certs, untrusted = filter_trusted certs in
+      Logs.debug (fun m ->
+          m "found %d certificates (%d total):" (M.cardinal trusted_certs)
+            (M.cardinal certs));
+      let out = to_ml untrusted trusted_certs in
+      let fn = match output with None -> "-" | Some filename -> filename in
+      Bos.OS.File.write (Fpath.v fn) out)
 
 let setup_log style_renderer level =
   Fmt_tty.setup_std_outputs ?style_renderer ();

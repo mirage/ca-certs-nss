@@ -2,4 +2,4 @@
  (name extract_from_certdata)
  (public_name extract-from-certdata)
  (libraries logs logs.fmt logs.cli fmt fmt.tty fmt.cli bos astring cmdliner
-            x509))
+   x509))
