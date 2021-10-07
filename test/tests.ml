@@ -71,8 +71,12 @@ let ok =
 let r = Alcotest.result ok err
 
 let test_one ta result host chain () =
-  let name = Domain_name.to_string host and host = Some host in
-  Alcotest.check r ("test one " ^ name) result (ta ~host chain)
+  let name, ip, host =
+    match host with
+    | `Ip ip -> Ipaddr.to_string ip, Some ip, None
+    | `Host h -> Domain_name.to_string h, None, Some h
+  in
+  Alcotest.check r ("test one " ^ name) result (ta ?ip ~host chain)
 
 let google =
   {|
@@ -969,7 +973,7 @@ let tests =
       in
       ( name,
         `Quick,
-        test_one default_auth (Ok (Some (chain, List.hd chain))) host chain ))
+        test_one default_auth (Ok (Some (chain, List.hd chain))) (`Host host) chain ))
     ok_tests
   @ List.map
       (fun (name, result, data, auth) ->
@@ -978,7 +982,7 @@ let tests =
           Result.get_ok
             (X509.Certificate.decode_pem_multiple (Cstruct.of_string data))
         and auth = match auth with None -> default_auth | Some a -> a in
-        (name, `Quick, test_one auth (Error (result host chain)) host chain))
+        (name, `Quick, test_one auth (Error (result host chain)) (`Host host) chain))
       err_tests
 
 let () =

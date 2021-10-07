@@ -13,7 +13,7 @@
  (depends
   mirage-crypto
   (mirage-clock (>= 3.0.0))
-  (x509 (>= 0.13.0))
+  (x509 (>= 0.15.0))
   (ocaml (>= 4.08.0))
   (logs :build)
   (fmt (and :build (>= 0.8.7)))
