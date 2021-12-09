@@ -15,14 +15,12 @@ module Clock_2020_10_11 = struct
     | Some t -> Ptime.(Span.to_d_ps (to_span t))
 
   let current_tz_offset_s () = None
-
   let period_d_ps () = None
 end
 
 module TA_2020_10_11 = Ca_certs_nss.Make (Clock_2020_10_11)
 
 let default_auth = Result.get_ok (TA_2020_10_11.authenticator ())
-
 let now = Ptime.v (Clock_2020_10_11.now_d_ps ())
 
 module Clock_2020_05_30 = struct
@@ -32,7 +30,6 @@ module Clock_2020_05_30 = struct
     | Some t -> Ptime.(Span.to_d_ps (to_span t))
 
   let current_tz_offset_s () = None
-
   let period_d_ps () = None
 end
 
@@ -45,7 +42,6 @@ let err =
     type t = X509.Validation.validation_error
 
     let pp = X509.Validation.pp_validation_error
-
     let equal a b = compare a b = 0 (* TODO relies on polymorphic equality *)
   end in
   (module M : Alcotest.TESTABLE with type t = M.t)
@@ -73,8 +69,8 @@ let r = Alcotest.result ok err
 let test_one ta result host chain () =
   let name, ip, host =
     match host with
-    | `Ip ip -> Ipaddr.to_string ip, Some ip, None
-    | `Host h -> Domain_name.to_string h, None, Some h
+    | `Ip ip -> (Ipaddr.to_string ip, Some ip, None)
+    | `Host h -> (Domain_name.to_string h, None, Some h)
   in
   Alcotest.check r ("test one " ^ name) result (ta ?ip ~host chain)
 
@@ -973,7 +969,9 @@ let tests =
       in
       ( name,
         `Quick,
-        test_one default_auth (Ok (Some (chain, List.hd chain))) (`Host host) chain ))
+        test_one default_auth
+          (Ok (Some (chain, List.hd chain)))
+          (`Host host) chain ))
     ok_tests
   @ List.map
       (fun (name, result, data, auth) ->
@@ -982,7 +980,9 @@ let tests =
           Result.get_ok
             (X509.Certificate.decode_pem_multiple (Cstruct.of_string data))
         and auth = match auth with None -> default_auth | Some a -> a in
-        (name, `Quick, test_one auth (Error (result host chain)) (`Host host) chain))
+        ( name,
+          `Quick,
+          test_one auth (Error (result host chain)) (`Host host) chain ))
       err_tests
 
 let () =

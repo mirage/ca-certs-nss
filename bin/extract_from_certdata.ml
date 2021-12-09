@@ -18,7 +18,6 @@ let decode_octal data =
   Bytes.unsafe_to_string out
 
 let label_token = "CKA_LABEL UTF8 "
-
 let serial_token = "CKA_SERIAL_NUMBER MULTILINE_OCTAL"
 
 let label_serial id serial = function
@@ -57,15 +56,11 @@ let grab_cert input =
   go None None None input
 
 let trust_ok_token = "CKT_NSS_TRUSTED_DELEGATOR"
-
 and not_trusted_token = "CKT_NSS_NOT_TRUSTED"
-
 and verify_token = "CKT_NSS_MUST_VERIFY_TRUST"
 
 let web_server_token = "CKA_TRUST_SERVER_AUTH"
-
 and email_token = "CKA_TRUST_EMAIL_PROTECTION"
-
 and code_signing_token = "CKA_TRUST_CODE_SIGNING"
 
 let ck_trust_token = " CK_TRUST "
