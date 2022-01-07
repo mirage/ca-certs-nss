@@ -1,3 +1,8 @@
+# v3.74 (2022-01-07)
+
+* Update to NSS 3.74 (Jan 6th 2022)
+* Update to NSS 3.73.1, 3.73, 3.72 (no changes in certdata.txt)
+
 # v3.71.0.1 (2021-10-07)
 
 * Adapt to X509 0.15.0 API changes
