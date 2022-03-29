@@ -269,7 +269,8 @@ let output =
 
 let cmd =
   let doc = "Extract NSS certdata.txt into OCaml code" in
-  ( Term.(term_result (const jump $ setup_log $ input $ output)),
-    Term.info "extract-from-certdata" ~version:"%%VERSION_NUM%%" ~doc )
+  let term = Term.(term_result (const jump $ setup_log $ input $ output))
+  and info = Cmd.info "extract-from-certdata" ~version:"%%VERSION_NUM%%" ~doc in
+  Cmd.v info term
 
-let () = match Term.eval cmd with `Ok () -> exit 0 | _ -> exit 1
+let () = exit (Cmd.eval cmd)

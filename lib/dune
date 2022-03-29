@@ -7,7 +7,7 @@
 ; (targets certdata.txt)
 ; (action
 ;  (bash
-;    "wget https://hg.mozilla.org/projects/nss/raw-file/b5b9832a38988f8b6ad58c81235ee85a62bdc8e0/lib/ckfw/builtins/certdata.txt -O %{targets}")))
+;    "wget https://hg.mozilla.org/projects/nss/raw-file/0e6c67470eed5044ace519e2405ddfa7186f0dc2/lib/ckfw/builtins/certdata.txt -O %{targets}")))
 
 (rule
  (targets trust_anchor.ml)
