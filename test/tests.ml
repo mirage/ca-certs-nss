@@ -73,13 +73,13 @@ let ok =
       match (a, b) with
       | None, None -> true
       | Some (a, _), Some (b, _) ->
-        let rec cmp_lists = function
-          (* TODO relies on polymorphic equality *)
-          | hd :: tl, hd' :: tl' -> compare hd hd' = 0 && cmp_lists (tl, tl')
-          | _, [] -> true
-          | _ -> false
-        in
-        cmp_lists (a, b)
+          let rec cmp_lists = function
+            (* TODO relies on polymorphic equality *)
+            | hd :: tl, hd' :: tl' -> compare hd hd' = 0 && cmp_lists (tl, tl')
+            | _, [] -> true
+            | _ -> false
+          in
+          cmp_lists (a, b)
       | _ -> false
   end in
   (module M : Alcotest.TESTABLE with type t = M.t)
