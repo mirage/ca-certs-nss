@@ -1,3 +1,8 @@
+# v3.77 (2022-04-22)
+
+* Update to NSS 3.77 (Mar 31th 2022)
+* Update to cmdliner 1.1.0 (#6)
+
 # v3.74 (2022-01-07)
 
 * Update to NSS 3.74 (Jan 6th 2022)
