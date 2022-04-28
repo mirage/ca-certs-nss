@@ -19,7 +19,7 @@
   (fmt (and :build (>= 0.8.7)))
   (bos :build)
   (astring :build)
-  (cmdliner :build)
+  (cmdliner (and :build (>= 1.1.0)))
   (alcotest :with-test))
  (conflicts (result (< 1.5)))
  (synopsis "X.509 trust anchors extracted from Mozilla's NSS")
