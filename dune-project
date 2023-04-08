@@ -18,7 +18,6 @@
   (logs :build)
   (fmt (and :build (>= 0.8.7)))
   (bos :build)
-  (astring :build)
   (cmdliner (and :build (>= 1.1.0)))
   (alcotest :with-test))
  (conflicts (result (< 1.5)))
