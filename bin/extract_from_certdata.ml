@@ -11,7 +11,8 @@ let until_end data =
   go [] data
 
 let decode_octal data =
-  let nums = Astring.String.cuts ~empty:false ~sep:"\\" data in
+  let nums = String.split_on_char '\\' data in
+  let nums = List.filter (fun s -> String.length s = 3) nums in
   let numbers = List.map (fun s -> int_of_string ("0o" ^ s)) nums in
   let out = Bytes.create (List.length nums) in
   List.iteri (fun i x -> Bytes.set out i (char_of_int x)) numbers;
@@ -20,17 +21,31 @@ let decode_octal data =
 let label_token = "CKA_LABEL UTF8 "
 let serial_token = "CKA_SERIAL_NUMBER MULTILINE_OCTAL"
 
+let is_prefix token x =
+  let tl = String.length token in
+  String.length x >= tl && String.(equal (sub x 0 tl) token)
+
+let is_suffix token x =
+  let tl = String.length token in
+  let xl = String.length x in
+  xl >= tl && String.(equal (sub x (xl - tl) tl) token)
+
+let strip_prefix token x =
+  let tl = String.length token in
+  let xl = String.length x in
+  String.sub x tl (xl - tl)
+
 let label_serial id serial = function
-  | x :: tl when Astring.String.is_prefix ~affix:label_token x ->
-      let llen = String.length label_token in
-      let id = Astring.String.drop ~min:llen ~max:llen x in
-      (Some id, serial, tl)
-  | x :: tl when x = serial_token ->
-      let serial, rest = until_end tl in
-      let serial = decode_octal (String.concat "" serial) in
-      (id, Some serial, rest)
-  | _ :: tl -> (id, serial, tl)
   | [] -> assert false
+  | x :: tl ->
+      if is_prefix label_token x then
+        let id = strip_prefix label_token x in
+        (Some id, serial, tl)
+      else if String.equal x serial_token then
+        let serial, rest = until_end tl in
+        let serial = decode_octal (String.concat "" serial) in
+        (id, Some serial, rest)
+      else (id, serial, tl)
 
 let get_id_serial id serial =
   let id = match id with None -> invalid_arg "no ID" | Some id -> id
@@ -66,18 +81,17 @@ and code_signing_token = "CKA_TRUST_CODE_SIGNING"
 let ck_trust_token = " CK_TRUST "
 
 let extract_trust x =
-  let open Astring.String in
   let is_trusted x =
-    if is_suffix ~affix:trust_ok_token x then `Trusted
-    else if is_suffix ~affix:not_trusted_token x then `Not_trusted
-    else if is_suffix ~affix:verify_token x then `Must_verify
+    if is_suffix trust_ok_token x then `Trusted
+    else if is_suffix not_trusted_token x then `Not_trusted
+    else if is_suffix verify_token x then `Must_verify
     else invalid_arg "unknown trust setting"
   in
-  if is_prefix ~affix:(web_server_token ^ ck_trust_token) x then
+  if is_prefix (web_server_token ^ ck_trust_token) x then
     Some (`Web, is_trusted x)
-  else if is_prefix ~affix:(email_token ^ ck_trust_token) x then
+  else if is_prefix (email_token ^ ck_trust_token) x then
     Some (`Email, is_trusted x)
-  else if is_prefix ~affix:(code_signing_token ^ ck_trust_token) x then
+  else if is_prefix (code_signing_token ^ ck_trust_token) x then
     Some (`Code_signing, is_trusted x)
   else None
 
@@ -209,8 +223,8 @@ let stats ucount tcount dcount =
     (ucount + tcount + dcount)
     ucount tcount
     (if dcount > 0 then
-     "\n(* Omitted " ^ string_of_int dcount ^ " certificates (decoding). *)"
-    else "")
+       "\n(* Omitted " ^ string_of_int dcount ^ " certificates (decoding). *)"
+     else "")
 
 let to_ml untrusted db =
   let certs, decoding_issues =
