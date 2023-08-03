@@ -1,3 +1,7 @@
+# v3.92 (2023-08-03)
+
+* Update to NSS 3.92 (July 27th 2023)
+
 # v3.89.1 (2023-05-06)
 
 * Update to NSS 3.89.1 (May 5th 2023)
