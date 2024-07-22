@@ -6,7 +6,7 @@ module Make (C : Mirage_clock.PCLOCK) = struct
           Result.bind acc (fun acc ->
               Result.map
                 (fun cert -> cert :: acc)
-                (X509.Certificate.decode_der (Cstruct.of_string data))))
+                (X509.Certificate.decode_der data)))
         (Ok []) Trust_anchor.certificates
     and time () = Some (Ptime.v (C.now_d_ps ())) in
     fun ?crls ?allowed_hashes () ->

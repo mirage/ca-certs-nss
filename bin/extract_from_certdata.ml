@@ -231,7 +231,7 @@ let to_ml untrusted db =
     M.fold
       (fun (lbl, _) cert (acc, dec) ->
         let der = decode_octal (String.concat "" cert) in
-        match X509.Certificate.decode_der (Cstruct.of_string der) with
+        match X509.Certificate.decode_der der with
         | Ok _cert ->
             (("(* " ^ lbl ^ " *) \"" ^ String.escaped der ^ "\"") :: acc, dec)
         | Error (`Msg msg) ->

@@ -1048,7 +1048,7 @@ let tests =
       let host = Domain_name.(of_string_exn name |> host_exn)
       and chain =
         Result.get_ok
-          (X509.Certificate.decode_pem_multiple (Cstruct.of_string data))
+          (X509.Certificate.decode_pem_multiple data)
       in
       ( name,
         `Quick,
@@ -1061,7 +1061,7 @@ let tests =
         let host = Domain_name.(of_string_exn name |> host_exn)
         and chain =
           Result.get_ok
-            (X509.Certificate.decode_pem_multiple (Cstruct.of_string data))
+            (X509.Certificate.decode_pem_multiple data)
         in
         ( name,
           `Quick,
