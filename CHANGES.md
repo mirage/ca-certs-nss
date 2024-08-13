@@ -1,3 +1,11 @@
+# v3.103 (2024-08-13)
+
+* Update to NSS 3.103 (Aug 1st 2024)
+
+# v3.101-1 (2024-07-24)
+
+* Delete cstruct and replace it by string (@dinosaure, #9)
+
 # v3.101 (2024-06-11)
 
 * Update to NSS 3.101 (June 7th 2024)
