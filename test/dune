@@ -1,3 +1,3 @@
 (test
  (name tests)
- (libraries ca-certs-nss alcotest))
+ (libraries ca-certs-nss alcotest mirage-ptime.mock mirage-ptime.set))
