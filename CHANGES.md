@@ -1,4 +1,8 @@
-# v3.108 (2025-02-05)
+# v3.108-1 (2025-02-05)
+
+* Use mirage-ptime instead of functorising over PCLOCK (#11 @hannesm)
+
+# v3.108 (2025-02-04)
 
 * Update to NSS 3.108 (Feb 3rd 2025)
 
