@@ -11,7 +11,7 @@
 (package
  (name ca-certs-nss)
  (depends
-  (mirage-clock (>= 3.0.0))
+  (mirage-ptime (>= 4.0.0))
   (x509 (>= 1.0.0))
   (ocaml (>= 4.13.0))
   (digestif (>= 1.2.0))

@@ -8,48 +8,20 @@
    - now is set to a static date (below, can be set to other dates in individual tests)
    - there's no revocation checks
 *)
-module Clock_2022_01_07 = struct
-  let now_d_ps () =
-    match Ptime.of_date_time ((2022, 01, 07), ((12, 00, 00), 00)) with
-    | None -> assert false
-    | Some t -> Ptime.(Span.to_d_ps (to_span t))
+let ts_2022_01_07 =
+  match Ptime.of_date_time ((2022, 01, 07), ((12, 00, 00), 00)) with
+  | None -> assert false
+  | Some t -> Ptime.(Span.to_d_ps (to_span t))
 
-  let current_tz_offset_s () = None
-  let period_d_ps () = None
-end
+let ts_2020_10_11 =
+  match Ptime.of_date_time ((2020, 10, 11), ((16, 00, 00), 00)) with
+  | None -> assert false
+  | Some t -> Ptime.(Span.to_d_ps (to_span t))
 
-module TA_2022_01_07 = Ca_certs_nss.Make (Clock_2022_01_07)
-
-let auth_2022_01_07 = Result.get_ok (TA_2022_01_07.authenticator ())
-
-module Clock_2020_10_11 = struct
-  let now_d_ps () =
-    match Ptime.of_date_time ((2020, 10, 11), ((16, 00, 00), 00)) with
-    | None -> assert false
-    | Some t -> Ptime.(Span.to_d_ps (to_span t))
-
-  let current_tz_offset_s () = None
-  let period_d_ps () = None
-end
-
-module TA_2020_10_11 = Ca_certs_nss.Make (Clock_2020_10_11)
-
-let auth_2020_10_11 = Result.get_ok (TA_2020_10_11.authenticator ())
-let ts_2020_10_11 = Ptime.v (Clock_2020_10_11.now_d_ps ())
-
-module Clock_2020_05_30 = struct
-  let now_d_ps () =
-    match Ptime.of_date_time ((2020, 05, 30), ((16, 00, 00), 00)) with
-    | None -> assert false
-    | Some t -> Ptime.(Span.to_d_ps (to_span t))
-
-  let current_tz_offset_s () = None
-  let period_d_ps () = None
-end
-
-module TA_2020_05_30 = Ca_certs_nss.Make (Clock_2020_05_30)
-
-let auth_2020_05_30 = Result.get_ok (TA_2020_05_30.authenticator ())
+let ts_2020_05_30 =
+  match Ptime.of_date_time ((2020, 05, 30), ((16, 00, 00), 00)) with
+  | None -> assert false
+  | Some t -> Ptime.(Span.to_d_ps (to_span t))
 
 let err =
   let module M = struct
@@ -86,12 +58,13 @@ let ok =
 
 let r = Alcotest.result ok err
 
-let test_one ta result host chain () =
+let test_one ta ts result host chain () =
   let name, ip, host =
     match host with
     | `Ip ip -> (Ipaddr.to_string ip, Some ip, None)
     | `Host h -> (Domain_name.to_string h, None, Some h)
   in
+  Mirage_ptime_set.set ts;
   Alcotest.check r ("test one " ^ name) result (ta ?ip ~host chain)
 
 let google =
@@ -388,8 +361,8 @@ SSL-Session:
 
 let ok_tests =
   [
-    ("google.com", google);
-    ("extended-validation.badssl.com", extended_validation_badssl);
+    ("google.com", google, ts_2022_01_07);
+    ("extended-validation.badssl.com", extended_validation_badssl, ts_2022_01_07);
   ]
 
 let self_signed_badssl =
@@ -1015,57 +988,53 @@ let err_tests =
     ( "self-signed.badssl.com",
       (fun _ _ -> `InvalidChain),
       self_signed_badssl,
-      auth_2020_10_11 );
+      ts_2020_10_11 );
     ( "expired.badssl.com",
-      (fun _ c -> `LeafCertificateExpired (List.hd c, Some ts_2020_10_11)),
+      (fun _ c ->
+        `LeafCertificateExpired (List.hd c, Some (Ptime.v ts_2020_10_11))),
       expired_badssl,
-      auth_2020_10_11 );
+      ts_2020_10_11 );
     ( "untrusted-root.badssl.com",
       (fun _ _ -> `InvalidChain),
       untrusted_root_badssl,
-      auth_2020_10_11 );
+      ts_2020_10_11 );
     ( "wrong.host.badssl.com",
       (fun h c -> `LeafInvalidName (List.hd c, Some h)),
       wrong_host_badssl,
-      auth_2020_10_11 );
+      ts_2020_10_11 );
     ( "incomplete-chain.badssl.com",
       (fun _ _ -> `InvalidChain),
       incomplete_chain_badssl,
-      auth_2020_10_11 );
+      ts_2020_10_11 );
     ( "sha1-intermediate.badssl.com",
       (fun _ _ -> `InvalidChain),
       sha1_intermediate_badssl,
-      auth_2020_05_30 );
+      ts_2020_05_30 );
     ( "wrong.host.google.com",
       (fun h c -> `LeafInvalidName (List.hd c, Some h)),
       google,
-      auth_2022_01_07 );
+      ts_2022_01_07 );
   ]
+
+let auth = Result.get_ok (Ca_certs_nss.authenticator ())
 
 let tests =
   List.map
-    (fun (name, data) ->
+    (fun (name, data, ts) ->
       let host = Domain_name.(of_string_exn name |> host_exn)
-      and chain =
-        Result.get_ok
-          (X509.Certificate.decode_pem_multiple data)
-      in
+      and chain = Result.get_ok (X509.Certificate.decode_pem_multiple data) in
       ( name,
         `Quick,
-        test_one auth_2022_01_07
-          (Ok (Some (chain, List.hd chain)))
-          (`Host host) chain ))
+        test_one auth ts (Ok (Some (chain, List.hd chain))) (`Host host) chain
+      ))
     ok_tests
   @ List.map
-      (fun (name, result, data, auth) ->
+      (fun (name, result, data, ts) ->
         let host = Domain_name.(of_string_exn name |> host_exn)
-        and chain =
-          Result.get_ok
-            (X509.Certificate.decode_pem_multiple data)
-        in
+        and chain = Result.get_ok (X509.Certificate.decode_pem_multiple data) in
         ( name,
           `Quick,
-          test_one auth (Error (result host chain)) (`Host host) chain ))
+          test_one auth ts (Error (result host chain)) (`Host host) chain ))
       err_tests
 
 let () =

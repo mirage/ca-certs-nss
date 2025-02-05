@@ -19,4 +19,4 @@
  (name ca_certs_nss)
  (public_name ca-certs-nss)
  (modules ca_certs_nss trust_anchor)
- (libraries x509 mirage-clock digestif))
+ (libraries x509 mirage-ptime digestif))
