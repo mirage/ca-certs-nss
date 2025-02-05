@@ -990,7 +990,8 @@ let err_tests =
       self_signed_badssl,
       ts_2020_10_11 );
     ( "expired.badssl.com",
-      (fun _ c -> `LeafCertificateExpired (List.hd c, Some (Ptime.v ts_2020_10_11))),
+      (fun _ c ->
+        `LeafCertificateExpired (List.hd c, Some (Ptime.v ts_2020_10_11))),
       expired_badssl,
       ts_2020_10_11 );
     ( "untrusted-root.badssl.com",
@@ -1021,23 +1022,16 @@ let tests =
   List.map
     (fun (name, data, ts) ->
       let host = Domain_name.(of_string_exn name |> host_exn)
-      and chain =
-        Result.get_ok
-          (X509.Certificate.decode_pem_multiple data)
-      in
+      and chain = Result.get_ok (X509.Certificate.decode_pem_multiple data) in
       ( name,
         `Quick,
-        test_one auth ts
-          (Ok (Some (chain, List.hd chain)))
-          (`Host host) chain ))
+        test_one auth ts (Ok (Some (chain, List.hd chain))) (`Host host) chain
+      ))
     ok_tests
   @ List.map
       (fun (name, result, data, ts) ->
         let host = Domain_name.(of_string_exn name |> host_exn)
-        and chain =
-          Result.get_ok
-            (X509.Certificate.decode_pem_multiple data)
-        in
+        and chain = Result.get_ok (X509.Certificate.decode_pem_multiple data) in
         ( name,
           `Quick,
           test_one auth ts (Error (result host chain)) (`Host host) chain ))
