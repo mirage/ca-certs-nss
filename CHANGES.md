@@ -1,3 +1,8 @@
+# v3.113.1 (2025-07-02)
+
+* Update to NSS 3.113.1 (2025-07-01)
+* Provide the function `trust_anchors`
+
 # v3.108-1 (2025-02-05)
 
 * Use mirage-ptime instead of functorising over PCLOCK (#11 @hannesm)
