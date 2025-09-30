@@ -1,4 +1,5 @@
 val authenticator :
+  ?time:(unit -> Ptime.t option) ->
   ?crls:X509.CRL.t list ->
   ?allowed_hashes:Digestif.hash' list ->
   unit ->

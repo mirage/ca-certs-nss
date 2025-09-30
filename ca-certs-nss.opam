@@ -13,7 +13,7 @@ doc: "https://mirage.github.io/ca-certs-nss/doc"
 bug-reports: "https://github.com/mirage/ca-certs-nss/issues"
 depends: [
   "dune" {>= "2.7"}
-  "mirage-ptime" {>= "4.0.0"}
+  "mkernel"
   "x509" {>= "1.0.0"}
   "ocaml" {>= "4.13.0"}
   "digestif" {>= "1.2.0"}

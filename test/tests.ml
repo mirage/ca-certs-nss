@@ -64,7 +64,9 @@ let test_one ta ts result host chain () =
     | `Ip ip -> (Ipaddr.to_string ip, Some ip, None)
     | `Host h -> (Domain_name.to_string h, None, Some h)
   in
-  Mirage_ptime_set.set ts;
+  let ts = Ptime.unsafe_of_d_ps ts in
+  let ts = Some ts in
+  let ta = ta (Fun.const ts) in
   Alcotest.check r ("test one " ^ name) result (ta ?ip ~host chain)
 
 let google =
@@ -1016,7 +1018,7 @@ let err_tests =
       ts_2022_01_07 );
   ]
 
-let auth = Result.get_ok (Ca_certs_nss.authenticator ())
+let auth time = Result.get_ok (Ca_certs_nss.authenticator ~time ())
 
 let tests =
   List.map
