@@ -6,8 +6,8 @@
 ;(rule
 ; (targets certdata.txt)
 ; (action
-;  (batsh
-;    "wget https://hg.mozilla.org/projects/nss/raw-file/e5444ee3df5a0ce28628f9df8f85ee64435c61b0/lib/ckfw/builtins/certdata.txt -O %{targets}")))
+;  (bash
+;    "wget https://hg.mozilla.org/projects/nss/raw-file/656b6762ab5bba905a8c12bb1aa8bedb59f508cd/lib/ckfw/builtins/certdata.txt -O %{targets}")))
 
 (rule
  (targets trust_anchor.ml)
