@@ -39,11 +39,11 @@ let replace_end_of_comment data =
   (* to avoid potential injection, filter the end of comment *)
   let els = String.split_on_char '*' data in
   let eoc =
-    List.map (fun str ->
-        if String.length str > 0 && String.get str 0 = ')' then
-          " " ^ str
-        else
-          str) els
+    List.map
+      (fun str ->
+        if String.length str > 0 && String.get str 0 = ')' then " " ^ str
+        else str)
+      els
   in
   String.concat "*" eoc
 
