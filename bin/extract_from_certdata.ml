@@ -35,11 +35,24 @@ let strip_prefix token x =
   let xl = String.length x in
   String.sub x tl (xl - tl)
 
+let replace_end_of_comment data =
+  (* to avoid potential injection, filter the end of comment *)
+  let els = String.split_on_char '*' data in
+  let eoc =
+    List.map
+      (fun str ->
+        if String.length str > 0 && String.get str 0 = ')' then " " ^ str
+        else str)
+      els
+  in
+  String.concat "*" eoc
+
 let label_serial id serial = function
   | [] -> assert false
   | x :: tl ->
       if is_prefix label_token x then
         let id = strip_prefix label_token x in
+        let id = replace_end_of_comment id in
         (Some id, serial, tl)
       else if String.equal x serial_token then
         let serial, rest = until_end tl in
