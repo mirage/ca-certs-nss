@@ -1,3 +1,7 @@
+# v3.131.1 (2026-10-21)
+
+* Update to NSS 3.131.1 (2026-10-20)
+
 # v3.129-1 (2026-09-23)
 
 * extraction: filter out of comment to avoid code injection (#12 @hannesm)
